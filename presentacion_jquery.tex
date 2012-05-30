@@ -121,6 +121,7 @@
   \end{itemize}
 \end{frame}
 
+\subsection{Cargando la librería}
 \begin{frame}[fragile]
 	\pause Para poder usar la librería debemos incluir el archivo javascript que la contiene. Si el archivo 
 			 se encuentra en la misma carpeta que el archivo HTML, podemos usar:
@@ -238,12 +239,6 @@
 		\end{block}
 \end{frame}
 
-\section{Eventos}
-\begin{frame}
-	\pause 
-\end{frame}
-
-
 \section{Modificando clases y atributos}
 \subsection{Clases}
 \begin{frame}[fragile]
@@ -311,6 +306,7 @@
 	\end{itemize}
 \end{frame}
 
+\section{Modificando el css}
 \subsection{Modificando el css}
 \begin{frame}[fragile]
 	\frametitle{Modificando el css}
@@ -330,9 +326,176 @@
 			$("#box").css({
 			   "height" : "300px",
 			   "width" : "400px"
-			   "margin" : "20px"
 			});
 		\end{lstlisting}
+	
+	\pause Algo que hay que tener en cuenta es que las propiedades que en css tienen nombres compuestos, separados
+		por ``-'' en JQuery deben ir todas las palabras juntas, borrando los ``-'', y cada nueva palabra debe comenzar
+		con una mayúscula. Por ejemplo: ``margin-left'' pasa a ser ``marginLeft''.
+\end{frame}
+
+\begin{frame}[fragile]
+	\pause El método css tambiés nos devuelve el valor de una propiedad del estilo si le pasamos como parámetro una cadena
+		con el nombre de dicha propiedad. Por ejemplo, si queremos saber si un elemento está siendo mostrado en la página
+		podríamos hacer:
+	\pause \begin{lstlisting}
+			var display = $("#box").css("display");
+		\end{lstlisting}
+	\pause \begin{lstlisting}
+			if(display == "none") {
+			   alert("Está oculto");
+			} else {
+			   alert("Es visible");
+			}
+		\end{lstlisting}
+	
+	\pause Ahora podríamos hacer que el elemento se muestre o se oculte dapendiendo de si está siendo mostrado o no.
+	
+	\pause Para mostrar un elemento podríamos usar:
+	\pause \begin{lstlisting}
+			$("#box").css("display", "block");
+		\end{lstlisting}
+	\pause Esto funcionaría, pero JQuery nos proporciona un método que hace esto de forma automática. Este método es
+		\textbf{show} y se usa de la siguiente forma:
+	\pause \begin{lstlisting}
+			$("#box").show();
+		\end{lstlisting}
+\end{frame}
+
+\begin{frame}[fragile]
+	\pause Análogamente disponemos del método \textbf{hide}, que oculta un elemento del DOM:
+	\pause \begin{lstlisting}
+			$("#box").hide();
+		\end{lstlisting}
+	\pause Esto sería lo mismo que hacer:
+	\pause \begin{lstlisting}
+			$("#box").css("display", "none");
+		\end{lstlisting}
+	
+	\pause Ahora uniendo todo, podríamos crear una función toggle a la que le pasamos una cadena con el
+		selector de un elemento y oculta dicho elemento si este está siendo mostrado o lo muestra si no.
+		Esta función quedaría como (en el siguiente slide): 
+\end{frame}
+
+\begin{frame}[fragile]
+ \pause \begin{lstlisting}
+			function cambiar(selector) {
+			   var elem = $(selector);
+			   
+			   if(elem.css("display") == "none") {
+			      elem.show(); // Mostramos el elemento
+			   } else {
+			      elem.hide(); // Ocultamos el elemento
+			   }
+			}
+			
+			cambiar("#box");
+		\end{lstlisting}
+	\pause Esta función que hicimos ya existe en JQuery y se llama toggle, se usa de la siguiente forma:
+	\pause \begin{lstlisting}
+			$("#box").toggle();
+		\end{lstlisting}
+\end{frame}
+
+
+\section{Eventos}
+\subsection{Funciones para manejar eventos}
+\begin{frame}[fragile]
+	\frametitle{Eventos}
+	\pause Los eventos son ``avisos'' que son lanzados cuando ocurre algún tipo de cambio sobre los elementos del DOM.
+	
+	\pause Existen varios tipos de eventos. Algunos responden a acciones que realiza el usuarios,
+			como: ``click'', ``hover'', ``focus'', ``submit'', etc; mientras que otros son consecuencia de cambios en
+			la página, como: ``ready'', ``load''.
+	
+	\pause Muchas veces nos interesa realizar una acción cuando cierto evento ocurre. Para esto JQuery nos
+			proporciona las siguientes funciones:
+	
+	\begin{itemize}
+		\pause \item \textbf{bind}: recibe dos parámentros, una cadena con el evento que se quiere ``escuchar'' y una función
+				que se va a ejecutar cada vez que el evento es lanzado. Por ejemplo si queremos mostrar un alert cada vez
+				que se hace click en algún \emph{a} de la página podemo hacer:
+				\begin{lstlisting}
+					$("a").bind("click", function(event) {alert("Se ha presionado un a");});
+				\end{lstlisting}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+	\begin{itemize}
+		\pause \item \textbf{unbind}: Produce que una función que se enlazó a un evento usando \textbf{bind} deje de ejecutarse
+				cada vez que se lanza dicho evento. Esto sólo funcionara si la función que se enlazó al evento no era una
+				función anonima. 
+				\pause \begin{lstlisting}
+					function alertarClick(event) {alert("Se ha presionado un link");}
+					
+					$("a").bind("click", alertarClick);
+					$("a").unbind("click", alertarClick);
+				\end{lstlisting}
+				
+				\pause Si en cambio se quiere eliminar todas las funciones que están enlazadas a cualquier evento
+					de un grupo de elementos usamos:
+				\pause \begin{lstlisting}
+					$("a").unbind();
+				\end{lstlisting}
+				
+				\pause O si se quiere eliminar todas las funciones enlazadas a un evento especifico de un grupo de
+					elementos podemos usar:
+				\pause \begin{lstlisting}
+					$("a").unbind("click");
+				\end{lstlisting}
+	\end{itemize}
+\end{frame}
+
+\subsection{Atajos para enlazar eventos}
+\begin{frame}[fragile]
+	\pause Existen varios atajos para bindear eventos, algunos son:
+	\begin{itemize}
+		\pause \item \textbf{click}:
+		\pause \begin{lstlisting}
+					$("a").bind("click", function(event){});
+					$("a").click(function(event){});
+				\end{lstlisting}
+		\pause \item \textbf{submit}:
+		\pause \begin{lstlisting}
+					$("form").bind("submit", function(event){});
+					$("form").submit(function(event){});
+				\end{lstlisting}
+		\pause \item \textbf{change}:
+		\pause \begin{lstlisting}
+					$("select[name=pais]").bind("change", function(event){});
+					$("select[name=pais]").change(function(event){});
+				\end{lstlisting}
+		\pause \item \textbf{ready}:
+		\pause \begin{lstlisting}
+					$(document).bind("ready", function(event){});
+					$(document).ready(function(event){});
+				\end{lstlisting}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+	\begin{itemize}
+		\pause \item \textbf{hover}: es un caso especial en donde se le pueden pasar dos funciones
+			como parámetros en vez de sólo una. La primera función se va a ejecutar cuando el puntero
+			del mouse entre en el elemento y la segunda cuando éste salga.
+		\pause \begin{lstlisting}
+					$("a").bind("mouseenter", function(e){alert("entro");});
+					$("a").bind("mouseleave", function(e){alert("salio");});
+					
+					$("a").hover(
+					   function(e){alert("entro");},
+					   function(e){alert("salio");}
+					);
+				\end{lstlisting}
+	\end{itemize}
+	
+	\pause \begin{block}{El objeto Event}
+		Las funciones que enlazamos a los eventos reciben como primer parámetro un objeto que representa al evento
+		lanzado. Este objeto posee, entre otras cosas, una referencia al elemento que lanzó el objeto y algunas funciones
+		que nos pueden ser de utilidad. Dentro de ellas, \emph{preventDefault} nos permite evitar que el objeto realice
+		la acción que tiene asociada para ese evento por defecto.
+	\end{block}
 \end{frame}
 
 \begin{frame}
