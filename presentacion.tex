@@ -1,0 +1,621 @@
+%\documentclass[10pt]{beamer}
+\documentclass[handout, 10pt]{beamer}
+
+\mode<handout>{
+	\usepackage{pgf}
+	\usepackage{pgfpages}
+	
+	\pgfpagesdeclarelayout{4 on 1 boxed}
+{
+  \edef\pgfpageoptionheight{\the\paperheight} 
+  \edef\pgfpageoptionwidth{\the\paperwidth}
+  \edef\pgfpageoptionborder{0pt}
+}
+{
+  \pgfpagesphysicalpageoptions
+  {%
+    logical pages=4,%
+    physical height=\pgfpageoptionheight,%
+    physical width=\pgfpageoptionwidth%
+  }
+  \pgfpageslogicalpageoptions{1}
+  {%
+    border code=\pgfsetlinewidth{2pt}\pgfstroke,%
+    border shrink=\pgfpageoptionborder,%
+    resized width=.5\pgfphysicalwidth,%
+    resized height=.5\pgfphysicalheight,%
+    center=\pgfpoint{.25\pgfphysicalwidth}{.75\pgfphysicalheight}%
+  }%
+  \pgfpageslogicalpageoptions{2}
+  {%
+    border code=\pgfsetlinewidth{2pt}\pgfstroke,%
+    border shrink=\pgfpageoptionborder,%
+    resized width=.5\pgfphysicalwidth,%
+    resized height=.5\pgfphysicalheight,%
+    center=\pgfpoint{.75\pgfphysicalwidth}{.75\pgfphysicalheight}%
+  }%
+  \pgfpageslogicalpageoptions{3}
+  {%
+    border code=\pgfsetlinewidth{2pt}\pgfstroke,%
+    border shrink=\pgfpageoptionborder,%
+    resized width=.5\pgfphysicalwidth,%
+    resized height=.5\pgfphysicalheight,%
+    center=\pgfpoint{.25\pgfphysicalwidth}{.25\pgfphysicalheight}%
+  }%
+  \pgfpageslogicalpageoptions{4}
+  {%
+    border code=\pgfsetlinewidth{2pt}\pgfstroke,%
+    border shrink=\pgfpageoptionborder,%
+    resized width=.5\pgfphysicalwidth,%
+    resized height=.5\pgfphysicalheight,%
+    center=\pgfpoint{.75\pgfphysicalwidth}{.25\pgfphysicalheight}%
+  }%
+}
+
+
+  \pgfpagesuselayout{4 on 1 boxed}[a4paper, border shrink=2mm, landscape]
+  \nofiles
+}
+
+\usepackage[utf8]{inputenc}
+\usepackage{default}
+\usepackage{verbatim}
+\usepackage{hyperref}
+
+\usepackage{listings}
+\usepackage{color}
+\definecolor{lightgray}{rgb}{.9,.9,.9}
+\definecolor{darkgray}{rgb}{.4,.4,.4}
+\definecolor{purple}{rgb}{0.65, 0.12, 0.82}
+
+\lstdefinelanguage{JavaScript}{
+  keywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywords={class, export, boolean, throw, implements, import, this},
+  ndkeywordstyle=\color{darkgray}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstset{
+   language=JavaScript,
+   backgroundcolor=\color{lightgray},
+   extendedchars=true,
+   basicstyle=\footnotesize\ttfamily,
+   showstringspaces=false,
+   showspaces=false,
+   numberstyle=\footnotesize,
+   numbersep=9pt,
+   tabsize=3,
+   breaklines=true,
+   showtabs=false,
+   captionpos=b
+}
+
+\usetheme{Warsaw}
+\title[Javascript - JQuery (Parte 1)]{Introducción a JavaScript}
+\author{Mauro Bender}
+\date{Mayo 28, 2012}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\section{Javascript}
+\subsection{Introducción}
+\begin{frame}
+  \frametitle{Javascript}
+
+
+  \begin{itemize}
+    \pause \item Es un lenguaje de programación que se ejecuta del lado del cliente, es decir, se ejecuta en el navegador del usuario.
+    \pause \item Nos permite acceder al DOM (Document Object Model) del documento de forma ``fácil''.
+    \pause \item Nos proporciona herramientas para poder manipular el DOM.
+    \pause \item Vamos a ver los aspectos básicos del lenguaje y herramientas que nos van a ser útiles al momento de hacer nuestras animaciones.
+  \end{itemize}
+  
+  \onslide<3->
+  \begin{block}{DOM}
+	El DOM (Document Object Model) es un interfaz a través de la cual nos es posible acceder y modificar el contenido,
+	estructura y estilo de los documentos HTML (es lo que nos permite acceder a todas esas cositas bonitas que queremos
+	cambiar y animar). \\
+	
+	Mas información: \url{http://es.wikipedia.org/wiki/Document_Object_Model}.
+  \end{block}
+
+\end{frame}
+
+\section{Variables}
+\subsection{Declarar variables}
+\begin{frame}[fragile]
+	\frametitle{Variables}
+	En javascript las variables no son más que ``contenedores'' que nos permiten almacenar distintos tipos de valores.
+	
+	\pause
+	
+	Para declarar una variable usamos la palabra reservada \textbf{var} como sigue:
+	
+	\begin{lstlisting}
+		var nombre_variable;
+	\end{lstlisting}
+	
+	\pause
+	
+	Los nombres de variables pueden contener caracteres alfanuméricos y los símbolos $\$$ y $\_$, con la salvedad
+	de que no pueden comenzar con un número.
+	
+	\pause
+	
+	Las variables se pueden inicializar al declararlas o en cualquier momento posterior en el programa, para esto
+	usamos el operador de $=$:
+	\begin{lstlisting}
+		var numero = 5;
+		var nombre;
+		nombre = "Margarito Flores";
+	\end{lstlisting}
+	
+\end{frame}
+
+\subsection{Tipos de variables}
+\begin{frame}[fragile]
+	\frametitle{Tipos de variables}
+	En javascript las variables pueden ser de diferentes tipos: 
+	\begin{itemize}
+		\pause \item \textbf{Numeric}: Variables numéricas como: 1, 4, 4.
+		\pause \item \textbf{String}: Cadenas de caracteres (texto) como: ``Hola mundo!'', ``Dieguín!!''.
+		\pause \item \textbf{Boolean}: Valores de verdad: \textbf{true} o \textbf{false}.
+		\pause \item \textbf{Array}: Es una lista de elementos indexada por un número positivo:
+			\begin{lstlisting}
+				var colores = ["rojo", "azul", "verde"];
+			\end{lstlisting}
+			
+		\pause \item \textbf{Object}: Objetos, pares de clave valor como por ejemplo:
+			\begin{lstlisting}
+				var objeto = {"nombre": "mauro", "edad" : 24};
+			\end{lstlisting}
+	\end{itemize}
+	
+	No es necesario especificar el tipo de valor que va a contener la variable, javascript lo determina
+	al momento en que se le asigna un valor.
+\end{frame}
+
+\subsection{Los tipos String y Array}
+\begin{frame}[fragile]
+	\frametitle{Tipo String y Array}
+	\pause Las variables de tipo String y Array proporcionan un conjunto de propiedades y métodos que son
+			útiles cuando se esta trabajando con ellas. \\
+	
+	\pause De ellas una de las más importantes en ``length'' que nos devuelve el tamaño de la cadena
+	o del arreglo.
+	
+	\pause
+	\begin{lstlisting}
+		var cadena  = "Esto es una cadena ;-)";
+		var arreglo = ["esto", "es", "un", "arreglo", ":P"];
+		
+		cadena.length;  // 22
+		arreglo.length; // 5
+	\end{lstlisting}
+	
+	\pause
+	\begin{block}{Más información}
+		Para saber que otras propiedades y/o métodos poseen los Arrays y los Strings pueden ir a 
+		\url{http://www.w3schools.com/jsref/jsref_obj_string.asp} (para información sobre el tipo
+		String) o a \url{http://www.w3schools.com/jsref/jsref_obj_array.asp} (para información sobre
+		el tipo Array).
+	\end{block}
+\end{frame}
+
+\subsection{Comentarios}
+\begin{frame}[fragile]
+	\begin{block}{Comentarios}
+		Los comentarios son porciones de textos que podemos a agregar a nuestro código para hacerlo más
+		entendible. Éstos no afectan la ejecución del código ya que son ignorados por el navegador. Para
+		escribir un comentario podemos usar \textbf{//} o \textbf{/*} \ldots \textbf{*/}:
+		\begin{lstlisting}
+			// Comentario de una linea
+			
+			/* Comentario
+			 de
+			 varias
+			 lineas
+			*/
+		\end{lstlisting}
+  \end{block}
+\end{frame}
+
+
+\section{Operadores}
+\subsection{Operadores aritméticos}
+\begin{frame}[fragile]
+	\frametitle{Operadores - Operadores aritméticos}
+	Existen diferentes tipos operadores en JavaScript
+	\begin{itemize}
+		\pause \item \textbf{+}: Efectúa la suma de dos números.
+			\begin{lstlisting}
+				var suma = 5 + 4; // suma ahora vale 9
+			\end{lstlisting}
+		
+		\pause \item \textbf{-}: Se utiliza para restar números.
+			\begin{lstlisting}
+				var resta = 5 - 4; // resta ahora vale 1
+			\end{lstlisting}
+		
+		\pause \item \textbf{*}: Sirve para multiplicar dos números
+			\begin{lstlisting}
+				var resultado = 2 * 3; // resultado ahora vale 6
+			\end{lstlisting}
+		
+		\pause \item \textbf{/}: Se utiliza para dividir dos números.
+			\begin{lstlisting}
+				var resultado = 6 / 3; // resultado ahora vale 2
+			\end{lstlisting}
+		
+		\pause \item \textbf{\%}: Se utiliza para obtener el modulo de una división (resto de la división entera).
+			\begin{lstlisting}
+				var resultado = 7 % 3; // resultado ahora vale 1
+			\end{lstlisting}
+	\end{itemize}
+\end{frame}
+
+\subsection{Operadores aritméticos unarios}
+\begin{frame}[fragile]
+	\frametitle{Operadores - Operadores aritméticos unarios}
+	\begin{itemize}
+		\pause \item \textbf{++}: Incrementa en uno la variable afectada.
+			\begin{lstlisting}
+				var numero = 1;
+				numero++; // numero ahora vale 2
+			\end{lstlisting}
+			\pause Es lo mismo que ejecutar:
+			\begin{lstlisting}
+				var numero = 1;
+				numero = numero + 1; // numero ahora vale 2
+			\end{lstlisting}
+		\pause \item \textbf{$--$}: Análogo a \textbf{++}. Decrementa en uno la variable afectada.
+			\begin{lstlisting}
+				var numero = 1;
+				numero--; // numero ahora vale 0
+			\end{lstlisting}
+			\pause Es lo mismo que ejecutar:
+			\begin{lstlisting}
+				var numero = 1;
+				numero = numero - 1; // numero ahora vale 0
+			\end{lstlisting}
+	\end{itemize}
+\end{frame}
+
+
+\subsection{Operadores de comparación}
+\begin{frame}[fragile]
+	\frametitle{Operadores - Operadores de comparación}
+	\begin{itemize}
+		\pause \item \textbf{==}: Devuelve \textbf{true} si los dos operandos son iguales. \textbf{false} en cualquier otro caso.
+			\begin{lstlisting}
+				var num1 = 5, num2 = 3, num3 = 5;
+				num1 == num2; // false
+				num1 == num3; // true
+			\end{lstlisting}
+			
+		\pause \item \textbf{!=}: Devuelve \textbf{true} si los dos operandos son distintos. \textbf{false} en cualquier otro caso.
+			\begin{lstlisting}
+				var nombre1 = "javier", nombre2 = "adri", nombre3 = "javier";
+				nombre1 != nombre2; // false
+				nombre1 != nombre3; // true
+			\end{lstlisting}
+		
+		\pause \item \textbf{!}: Niega la expresión afectada. Devuelve \textbf{true} si expresión es falsa y \textbf{false} si es verdadera.
+			\begin{lstlisting}
+				var falso     = !true; // falso es igual a false
+				
+				var distintos =  !("iguales" == "iguales"); // Es lo mismo que hacer "iguales" != "iguales"
+			\end{lstlisting}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+	\begin{itemize}
+		\pause \item \textbf{===}: Compara por igualdad pero con un criterio más fuerte que ==. Devuelve \textbf{true} si los dos
+						  operandos contienen el mismo valor y además son del mismo tipo. \textbf{false} en cualquier otro caso.
+			\begin{lstlisting}
+				var num1 = 5, // Es del tipo Numeric
+				    num2 = "5", // Es del tipo String
+				    num3 = 5; // Es del tipo Numeric
+				num1 === num2; // false
+				num1 === num3; // true
+			\end{lstlisting}
+			
+		\pause \item \textbf{!==}: Análogo a \textbf{===}. Devuelve \textbf{true} si los operandos son de distinto tipo o si si contienen
+		             distintos valores. \textbf{false} en cualquier otro caso.
+			\begin{lstlisting}
+				var num1 = 5, // Es del tipo Numeric
+				    num2 = "5", // Es del tipo String
+				    num3 = 3; // Es del tipo Numeric
+				num1 !== num2; // true
+				num1 !== num3; // true
+			\end{lstlisting}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+	\begin{itemize}
+		\pause \item $\boldmath{<, <=, >, >=}$: Devuelven \textbf{true} si el primer operando es menor, menor o igual, mayor o
+		mayor o igual que el segundo operando respectivamente. \textbf{false} en otro caso.
+			\begin{lstlisting}
+				var num1 = 5, num2 = 3, num3 = 5;
+				num1 < num2;  // false
+				num1 <= num3; // true;
+				num1 > num3;  // false
+				num1 >= num2; // true
+			\end{lstlisting}
+	\end{itemize}
+	
+	\pause
+	
+	\begin{block}{Para tener en cuenta}
+      El operador $+$ también sirve para concatenar cadenas y arrays.
+      \begin{lstlisting}
+			var nombre = "Mauro" + " " + "Bender";
+				// nombre ahora es "Mauro Bender"
+			
+			var colores = ["azul", "rojo"] + ["blanco", "negro"];
+				// colores ahora es ["azul", "rojo", "blanco", "negro"]
+		\end{lstlisting}
+   \end{block}
+\end{frame}
+
+\section{Funciones}
+\subsection{Declarando funciones}
+\begin{frame}[fragile]
+	\frametitle{Funciones}
+	Las funciones son bloques de códigos que reciben parámetros y pueden devolver un valor. Para declarar una función usamos
+	la palabra reservada \textbf{function} y encerramos el código de la función entre \{ \}.
+	
+	\begin{lstlisting}
+		function nombre_de_la_funcion (param1, param2, ...) {
+		   // codigo de la funcion
+		}
+	\end{lstlisting}
+	
+	\pause
+	
+	La palabra reservada \textbf{return} se utiliza para indicar que se debe terminar la ejecución de la función 
+	y devolver el valor que se indica a continuación. Si no se indica, la función termina al encontrar la \} que
+	cierra el bloque y no devuelve ningún valor.
+	
+	\begin{lstlisting}
+		function suma(numero1, numero2) {
+		   return numero1 + numero2;
+		}
+	\end{lstlisting}
+	
+	\pause
+	
+	Para llamar a una función sólo debemos escribir su nombre pasándole entre paréntesis los valores que queremos que
+	reciba.
+	
+	\begin{lstlisting}
+		var res = suma(3, 6); // res es ahora 9
+	\end{lstlisting}
+\end{frame}
+
+\subsection{Funciones como valores de variables}
+\begin{frame}[fragile]
+	En javascript las funciones son interpretadas como valores, por lo que las podemos asignar a una variable.
+	
+	\begin{lstlisting}
+		var suma = function(numero1, numero2) {return numero1 + numero2;}
+		var res = suma(3, 6);
+	\end{lstlisting}
+	
+	\pause
+	
+	Por lo tanto, también es posible pasarlas como un parámetro a otra función.
+	
+	\begin{lstlisting}
+		function alertarResultado (funcion, param1, param2) {
+			var res = funcion(param1, param2);
+		   alert(res);
+		}
+		function suma(num1, num2) {return num1 + num2;}
+		
+		alertarResultado(suma, 3, 6);
+	\end{lstlisting}
+\end{frame}
+
+\section{Estructuras de control}
+\subsection{If... Else...}
+\begin{frame}[fragile]
+	\frametitle{Estructuras de control}
+	En javascript disponemos también de ciertas estructuras que nos permiten controlar el flujo de
+	ejecución de un programa. \\ 
+	\vspace*{10pt}
+	
+	\textbf{\large{If... Else...}} \\
+	
+	Con la estructura \textbf{if... else...} podemos decirle al programa que ejecute una porción de código
+	o no en base a una condición.
+	
+	\begin{lstlisting}
+		if(condicion) {
+			// hace algo si es condicion es verdadera
+		} else {
+			// hacer otra cosa en otra caso
+		}
+	\end{lstlisting}
+	
+	\pause
+	
+	El bloque correspondiente al \textbf{else} que sólo se ejecuta cuando la condición es false es
+	opcional y se puede omitir si uno así lo desea.
+\end{frame}
+
+\begin{frame}[fragile]
+	\pause
+	
+	En el siguiente ejemplo mostramos una alerta indicando si un número ingresado por el usuario es igual
+	o no a 3, usando un if.
+	
+	\begin{lstlisting}
+		var numero = prompt("Ingrese un numero:");
+		
+		if(numero == 3) {
+			alert("Es igual a 3 =).");
+		} else {
+			alert("No es igual a 3 =(.");
+		}
+	\end{lstlisting}
+	
+	\pause
+	
+	\begin{block}{prompt y alert}
+		\textbf{prompt} y \textbf{alert} son dos ``popups'' que nos proporciona javascript. \textbf{prompt} sirve para pedirle al usuario
+		que ingrese un valor mientras que \textbf{alert} se usa comúnmente para mostrarle información al usuario. \\
+		
+		Mas información: \url{http://www.w3schools.com/js/js_popup.asp}.
+	\end{block}
+
+\end{frame}
+
+\subsection{While}
+\begin{frame}[fragile]
+	\textbf{\large{While}} \\
+	
+	\textbf{while} sirve para repetir una porción de código mientras una condición siga siendo válida. Su sintaxis
+	es:
+	
+	\begin{lstlisting}
+		while(condicion) {
+			// hace algo mientras condicion sea verdadera
+		} 
+	\end{lstlisting}
+	
+	\pause
+	
+	Por ejemplo podemos tener un programa que vaya decrementando un número ingresado por el usuario en 1 hasta llegar
+	a 0, alertando en cada paso el número que va quedando.
+	
+	\begin{lstlisting}
+		var numero = prompt("Ingrese un numero mayor a 0: ");
+		
+		while(numero > 0) {
+			alert("Numero ahora todavia no es 0: " + numero);
+			
+			numero--;
+		} 
+		
+		alert("Llegamos a cero");
+	\end{lstlisting}
+\end{frame}
+
+\subsection{For}
+\begin{frame}[fragile]
+	\textbf{\large{For}} \\
+	
+	\textbf{for} es también una estructura de repetición como \textbf{while}, pero es usualmente usado para ejecutar
+	una porción de códigos una cantidad fija de veces.
+	
+	\begin{lstlisting}
+		for(incializacion; condicion; incremento) {
+			// codigo
+		} 
+	\end{lstlisting}
+	
+	\pause
+	
+	Como se puede ver la estructura \textbf{for} se compone de cuatro partes: 
+	\begin{itemize}
+		\pause \item \textbf{inicializacion}: Aquí debemos, como su nombre lo indica, inicializar las variables que vamos
+		      a usar para controlar el loop.
+		\pause \item \textbf{condicion}: Acá debemos escribir una condición que se tiene que cumplir para que el bucle se
+				siga ejecutando.
+		\pause \item \textbf{incremento}: Una porción de código que se va a ejecutar cada vez que se haya completado un
+				ciclo del bucle, usualmente usado para incrementar o decrementar la variable que se usa para controlar
+				el bucle.
+		\pause \item \textbf{codigo}: El código que se va a ejecutar en cada repetición.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+	\pause
+	
+	Ejemplo:
+	
+	\begin{lstlisting}
+		var colores = ["rojo", "verde", "azul", "blanco"];
+		
+		for(var i = 0; i < colores.length; i++) {
+			alert("El color actual es: " + colores[i]);
+		}
+	\end{lstlisting}
+	
+	\pause En el ejemplo creamos un array con diferentes colores y después lo recorremos y mostramos
+	       los colores que contiene usando un bucle \textbf{for}.
+
+\end{frame}
+
+\section{Repaso}
+\subsection{¿Qué vimos?}
+\begin{frame}[fragile]
+	\frametitle{Repaso}
+	
+	\pause ¿Qué vimos?
+	
+	\begin{itemize}
+		\pause \item Variables
+			\begin{itemize}
+				\pause \item Como declarar variables.
+				\pause \item Diferentes tipos de variables disponibles en Javascript.
+			\end{itemize}
+		
+		\pause \item Operadores
+			\begin{itemize}
+				\pause \item Operadores aritméticos.
+				\pause \item Operadores de comparación.
+				\pause \item Operadores cuya significado depende del tipo de variables a la que se aplica (``+'').
+			\end{itemize}
+		
+		\pause \item Funciones
+			\begin{itemize}
+				\pause \item Diferentes formas de declarar funciones.
+				\pause \item Funciones que reciben funciones como parámetros.
+			\end{itemize}
+		
+		\pause \item Estructuras de control de flujo
+			\begin{itemize}
+				\pause \item If... Else...
+				\pause \item While(){}
+				\pause \item For(;;){}
+			\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\subsection{¿Qué vamos a ver?}
+\begin{frame}[fragile]
+	\pause ¿Qué vamos a ver el jueves?
+	
+	\begin{itemize}
+		\pause \item La librería JQuery: ¿Qué es? ¿Cómo se usa?
+		\pause \item Uso de los selectores para obtener los elementos de la página.
+		\pause \item Cómo modificar el css de un elemento desde javascript.
+		\pause \item Animaciones incorporadas en JQuery.
+		\pause \item Crear nuestras animaciones con el método ``animate''.
+	\end{itemize}
+\end{frame}
+
+\begin{frame}
+	\begin{center}
+		Fin =).
+	\end{center}
+\end{frame}
+
+
+\end{document}

@@ -1,0 +1,346 @@
+\documentclass[10pt]{beamer}
+%\documentclass[handout, 10pt]{beamer}
+
+\mode<handout>{
+	\usepackage{pgf}
+	\usepackage{pgfpages}
+	
+	\pgfpagesdeclarelayout{4 on 1 boxed}
+{
+  \edef\pgfpageoptionheight{\the\paperheight} 
+  \edef\pgfpageoptionwidth{\the\paperwidth}
+  \edef\pgfpageoptionborder{0pt}
+}
+{
+  \pgfpagesphysicalpageoptions
+  {%
+    logical pages=4,%
+    physical height=\pgfpageoptionheight,%
+    physical width=\pgfpageoptionwidth%
+  }
+  \pgfpageslogicalpageoptions{1}
+  {%
+    border code=\pgfsetlinewidth{2pt}\pgfstroke,%
+    border shrink=\pgfpageoptionborder,%
+    resized width=.5\pgfphysicalwidth,%
+    resized height=.5\pgfphysicalheight,%
+    center=\pgfpoint{.25\pgfphysicalwidth}{.75\pgfphysicalheight}%
+  }%
+  \pgfpageslogicalpageoptions{2}
+  {%
+    border code=\pgfsetlinewidth{2pt}\pgfstroke,%
+    border shrink=\pgfpageoptionborder,%
+    resized width=.5\pgfphysicalwidth,%
+    resized height=.5\pgfphysicalheight,%
+    center=\pgfpoint{.75\pgfphysicalwidth}{.75\pgfphysicalheight}%
+  }%
+  \pgfpageslogicalpageoptions{3}
+  {%
+    border code=\pgfsetlinewidth{2pt}\pgfstroke,%
+    border shrink=\pgfpageoptionborder,%
+    resized width=.5\pgfphysicalwidth,%
+    resized height=.5\pgfphysicalheight,%
+    center=\pgfpoint{.25\pgfphysicalwidth}{.25\pgfphysicalheight}%
+  }%
+  \pgfpageslogicalpageoptions{4}
+  {%
+    border code=\pgfsetlinewidth{2pt}\pgfstroke,%
+    border shrink=\pgfpageoptionborder,%
+    resized width=.5\pgfphysicalwidth,%
+    resized height=.5\pgfphysicalheight,%
+    center=\pgfpoint{.75\pgfphysicalwidth}{.25\pgfphysicalheight}%
+  }%
+}
+
+
+  \pgfpagesuselayout{4 on 1 boxed}[a4paper, border shrink=2mm, landscape]
+  \nofiles
+}
+
+\usepackage[utf8]{inputenc}
+\usepackage{default}
+\usepackage{verbatim}
+\usepackage{hyperref}
+
+\usepackage{listings}
+\usepackage{color}
+\definecolor{lightgray}{rgb}{.9,.9,.9}
+\definecolor{darkgray}{rgb}{.4,.4,.4}
+\definecolor{purple}{rgb}{0.65, 0.12, 0.82}
+
+\lstdefinelanguage{JavaScript}{
+  keywords={typeof, new, true, false, catch, function, return, null, catch, switch, var, if, in, while, do, else, case, break},
+  keywordstyle=\color{blue}\bfseries,
+  ndkeywords={class, export, boolean, throw, implements, import, this},
+  ndkeywordstyle=\color{darkgray}\bfseries,
+  identifierstyle=\color{black},
+  sensitive=false,
+  comment=[l]{//},
+  morecomment=[s]{/*}{*/},
+  commentstyle=\color{purple}\ttfamily,
+  stringstyle=\color{red}\ttfamily,
+  morestring=[b]',
+  morestring=[b]"
+}
+
+\lstset{
+   language=JavaScript,
+   backgroundcolor=\color{lightgray},
+   extendedchars=true,
+   basicstyle=\footnotesize\ttfamily,
+   showstringspaces=false,
+   showspaces=false,
+   numberstyle=\footnotesize,
+   numbersep=9pt,
+   tabsize=3,
+   breaklines=true,
+   showtabs=false,
+   captionpos=b
+}
+
+\usetheme{Warsaw}
+\title[Javascript - JQuery (Parte 2)]{Animaciones con JQuery}
+\author{Mauro Bender}
+\date{Mayo 31, 2012}
+
+\begin{document}
+
+\begin{frame}
+\titlepage
+\end{frame}
+
+\section{JQuery}
+\subsection{Introducción}
+\begin{frame}[fragile]
+  \frametitle{JQuery}
+  \begin{itemize}
+    \pause \item Es una librería en javascript que nos permite, de forma fácil, modificar los elementos del DOM.
+    \pause \item Para obtener los elementos del DOM usamos selectores como los de css.
+    \pause \item Es facilmente extensible y debido a eso existen gran variedad de plugins..
+    \pause \item Vamos a ver los como hacer animaciones con los elementos que nos proporciona esta librería.
+  \end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+	\pause Para poder usar la librería debemos incluir el archivo javascript que la contiene. Si el archivo 
+			 se encuentra en la misma carpeta que el archivo HTML, podemos usar:
+	\pause \begin{lstlisting}[html]
+			<script type="text/javascript" language="javascript" src="jquery.js"></script>
+		\end{lstlisting}
+	\pause Si no disponemos de una copia local del archivo que contiene la librería siempre podemos usar una
+			 copia que se encuentra alojada en los servidores de google con el siguiente código:
+	\pause \begin{lstlisting}[html]
+			<script type="text/javascript" language="javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+		\end{lstlisting}
+	\pause Esto es especialmente útil cuando no se pueden subir al servidor archivos javascript.
+	\pause Para que nuestro código funcione correctamente es importante que nuestro la página se cargue completamente antes
+			 de que empecemos a modificarla. Para eso usamos el evento \textbf{ready} del documento:
+	\pause \begin{lstlisting}[html]
+			$(document).ready(function() {
+				// Aca va a ir nuestro codigo...
+			});
+		\end{lstlisting}
+\end{frame}
+
+\section{Selectores}
+\subsection{Selectores}
+\begin{frame}[fragile]
+	\frametitle{Selectores}
+	
+	\pause Para acceder a los elementos del DOM y modificarlos vamos a usar los selectores que nos proporciona
+			 JQuery, como por ejemplo:
+	
+	\pause \begin{lstlisting}[html]
+			var $links = $("a.link");
+		\end{lstlisting}
+		
+	\pause Este selector selecciona \textbf{TODOS} los elementos \textbf{a} que tenga la clase \textbf{link}. \\
+	
+	\pause \$ es un alias para la clase JQuery, y por lo tanto \$() construye un nuevo objeto de la clase JQuery
+			 que contiene todos los elementos a los que hace referencia el selector pasado.\\
+	
+	\pause Para seleccionar los elementos podemos usar expresiones de CSS.
+	
+	\pause Por ejemplo si tenemos un div como:
+	\pause \begin{lstlisting}[html]
+			<div id="box">Esto es una caja</div>
+		\end{lstlisting}
+		
+	\pause Podemos obtenerlo con:
+	\pause \begin{lstlisting}
+			var elem = $("#box");
+		\end{lstlisting}
+	
+	\pause Si en cambio queremos obtener todos los elementos con la clase ``item'', simplemente hacemos:
+	
+	\pause \begin{lstlisting}
+			var elems = $(".item");
+		\end{lstlisting}
+\end{frame}
+
+\subsection{Ejemplos}
+\begin{frame}[fragile]
+	\frametitle{Más ejemplos de selectores}
+	
+	\pause \begin{lstlisting}
+			var elems = $("#lista > li");
+		\end{lstlisting}
+	\pause Esto selecciona todos los \emph{li}s de la lista con id \emph{lista}.
+	
+	\pause \begin{lstlisting}
+			var elems = $("#lista li:first");
+		\end{lstlisting}
+	\pause Esto selecciona el primer \emph{li} de la lista con id \emph{lista}.
+	
+	\pause \begin{lstlisting}
+			var elems = $("#lista li:last");
+		\end{lstlisting}
+	\pause Esto selecciona el último \emph{li} de la lista \emph{\#lista}.
+	
+	\pause \begin{lstlisting}
+			var elems = $("div[data=username]");
+		\end{lstlisting}
+	\pause Esto selecciona todos los \emph{div}s que tengan el atributo \emph{data} y este sea igual a \emph{username}.
+	
+	\pause \begin{lstlisting}
+			var elems = $("*[seleccioname]");
+		\end{lstlisting}
+	\pause Esto selecciona todos los elementoss que tengan el atributo \emph{seleccioname}.
+	
+	\pause \begin{lstlisting}
+			var elems = $("a.clase-1, a.clase-2");
+		\end{lstlisting}
+	\pause Esto selecciona todos los \emph{a}s que tengan la clase \emph{clase-1} y o la clase \emph{clase-2}.
+\end{frame}
+
+\subsection{Selectores de JQuery}
+\begin{frame}[fragile]
+	\pause También disponemos de selectores que son propios de JQuery y se pueden combinar con los selectores
+			 CSS que vimos anteriormente. \\
+	
+	\pause Por ejemplo, si queremos seleccionar el primer \emph{p} que aparece en el documento, podemos hacer:
+	
+	\pause \begin{lstlisting}
+			var elems = $("p:eq(0)");
+		\end{lstlisting}
+	
+	\pause Esto busca todos los \emph{p}s del documento y se queda con el primero de ellos.
+	
+	\pause O si queremos todos \emph{div}s que tengan la clase \emph{cajita} y estén visibles, 
+			 podemos usar:
+	 
+	\pause \begin{lstlisting}
+			var elems = $("div.cajita:visible");
+		\end{lstlisting}
+		
+	\pause \begin{block}{Más selectores}
+			Para una lista completa de todos los selectores que se pueden usar pueden ir a \url{http://docs.jquery.com/DOM/Traversing/Selectors#CSS_Selectors}.
+		\end{block}
+\end{frame}
+
+\section{Eventos}
+\begin{frame}
+	\pause 
+\end{frame}
+
+
+\section{Modificando clases y atributos}
+\subsection{Clases}
+\begin{frame}[fragile]
+	\frametitle{Modificando las clases}
+	
+	\pause Para modificar las clases que posee un grupo de elementos JQuery nos proporciona los siguientes métodos:
+	
+	\begin{itemize}
+		\pause \item \textbf{addClass}: Nos permite agregarle una o más clases a un grupo de elementos, recibe como parámetro
+				 una cadena con las clases a agregar separadas por espacios.
+		\pause \begin{lstlisting}
+			$("div.link").addClass("active"); // Agregamos la clase active a todos los divs con clase link
+			$("p").addClass("bold big-font"); // Agregamos las clases bold y big-font a todos los ps del documento
+		\end{lstlisting}
+		
+		\pause \item \textbf{removeClass}: Nos permite eliminar una o más clases de un elemento, recibe como parámetro las clases a eliminar.
+		\pause \begin{lstlisting}
+			$("div.active").removeClass("active open"); // Eliminamos las clases active y open
+		\end{lstlisting}
+		
+		\pause \item \textbf{hasClass}: Nos permite saber si un elemento tiene o no una clase. Recibe como parámetro la clase
+			que se quiere verificar y devuelve \textbf{true} en caso que la contenga y \textbf{false} en caso contrario.
+		\pause \begin{lstlisting}
+		$("div.link").hasClass("active"); // true
+		\end{lstlisting}
+	\end{itemize}
+\end{frame}
+
+\subsection{Atributos}
+\begin{frame}[fragile]
+	\frametitle{Modificando los atributos}
+	
+	\pause Para modificar las atributos de los elementos disponemos de los siguientes métodos:
+	
+	\begin{itemize}
+		\pause \item \textbf{attr}: Nos permite obtener el valor de un atributo del primer elemento que coincida con el selector.
+			Debemos pasarle como parámetro el nombre del atributo. Nos devuelve el valor del atributo si éste está seteado o
+			undefined en caso de no estarlo.
+			\pause \begin{lstlisting}
+				var url = $("a.link").attr("href");
+			\end{lstlisting}
+			
+			\pause \textbf{attr} también nos permite setear los atributos de uno o más elementos. Para esto disponemos de dos formas:
+			\begin{itemize}
+				\pause \item Si queremos setear sólo un atributo, le podemos pasar como parámetros el nombre del atributo y el valor.
+				\pause \begin{lstlisting}
+					$("img").attr("src", "http://server.com/imagen.jpg");
+				\end{lstlisting}
+				
+				\pause \item Si en cambio queremos setear varios atributos al mismo tiempo le podemos pasar un objeto.
+				\pause \begin{lstlisting}
+					$("img#foto").attr({"alt" : "Una foto", "title" : "con title"});
+				\end{lstlisting}
+			\end{itemize}
+		\end{itemize}
+\end{frame}
+
+\begin{frame}[fragile]
+	\frametitle{Modificando los atributos - continuación}
+	\begin{itemize}
+		\pause \item \textbf{removeAttr}: Nos permite eliminar una o más clases de un elemento, recibe como parámetro las clases a eliminar.
+		\pause \begin{lstlisting}
+			$("div.active").removeClass("active open"); // Eliminamos las clases active y open
+		\end{lstlisting}
+	\end{itemize}
+\end{frame}
+
+\subsection{Modificando el css}
+\begin{frame}[fragile]
+	\frametitle{Modificando el css}
+	
+	\pause Para modificar los estilos de un elemento siemplemente usamos el método \textbf{css} del objeto que
+		hace referencia al elemento a modificar. \\
+		
+	\pause Hay dos formas de llamar al método css, una es pasandole dos argumentos: la propiedad a modificar
+		y el valor nuevo de dicha propiedad:
+	\pause \begin{lstlisting}
+			$("selector").css("propiedad", "valor");
+		\end{lstlisting}
+		
+	\pause O, si queremos modificar varias propiedades a la vez, un objeto con las propiedades a modificar como
+		claves y los nuevos valores de esas propiedades como los valores de dichas claves:
+	\pause \begin{lstlisting}
+			$("#box").css({
+			   "height" : "300px",
+			   "width" : "400px"
+			   "margin" : "20px"
+			});
+		\end{lstlisting}
+\end{frame}
+
+\begin{frame}
+	\begin{center}
+		Fin =).
+	\end{center}
+\end{frame}
+
+
+\end{document}
+ para esta librería
